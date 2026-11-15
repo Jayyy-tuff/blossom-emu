@@ -135,11 +135,20 @@ def main():
         xml_files += [os.path.join(root, f) for f in files if f.endswith(".xml")]
     for path in xml_files:
         text = open(path, encoding="utf-8").read()
-        new = ref_re.sub(fix_ref, text)
+        # Upstream has a file with a second XML declaration after the root element.
+        # The app build tolerates it; the stricter library resource parser does not.
+        new = text[:5] + re.sub(r"<\?xml[^>]*\?>", "", text[5:])
+        new = ref_re.sub(fix_ref, new)
         if os.path.basename(os.path.dirname(path)).split("-")[0] == "values":
             new = def_re.sub(fix_def, new)
         if new != text:
             open(path, "w", encoding="utf-8").write(new)
+
+    for path in xml_files:
+        try:
+            ET.parse(path)
+        except ET.ParseError as e:
+            sys.exit(f"Malformed XML after preparation: {path}: {e}")
 
     # 1c. Rewrite references in Kotlin, including view-binding class names.
     r_re = re.compile(r"\bR\.([a-z]+)\.([A-Za-z0-9_]+)")
