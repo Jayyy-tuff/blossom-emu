@@ -27,7 +27,12 @@ jobs:
 
       - name: Read pinned Azahar commit
         id: pin
-        run: echo "commit=$(cat cores/3ds/AZAHAR_COMMIT)" >> "$GITHUB_OUTPUT"
+        run: |
+          echo "commit=$(cat cores/3ds/AZAHAR_COMMIT)" >> "$GITHUB_OUTPUT"
+          # Hash only tracked files, computed once: the Azahar checkout and build
+          # output appear under cores/3ds later in this job.
+          HASH=$( { git ls-files -s cores/3ds src/android/app/src/main/res; } | sha256sum | cut -c1-16)
+          echo "hash=${HASH}" >> "$GITHUB_OUTPUT"
 
       # The AAR only changes when Azahar, the 3DS build files or the Switch app's
       # resource names (which decide what gets renamed) change.
@@ -36,7 +41,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: src/android/app/libs/blossom-3ds.aar
-          key: blossom-3ds-aar-${{ steps.pin.outputs.commit }}-${{ hashFiles('cores/3ds/**', 'src/android/app/src/main/res/**') }}
+          key: blossom-3ds-aar-${{ steps.pin.outputs.commit }}-${{ steps.pin.outputs.hash }}
 
       - name: Free disk space
         if: steps.cache.outputs.cache-hit != 'true'
