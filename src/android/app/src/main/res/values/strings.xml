@@ -1946,4 +1946,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <string name="add_folders">Add Folder</string>
     <string name="percent">%1$d%%</string>
 
+    <!-- Blossom -->
+    <string name="blossom_3ds" translatable="false">Nintendo 3DS</string>
+    <string name="blossom_3ds_description" translatable="false">Open the 3DS library (Azahar core)</string>
+
 </resources>

@@ -30,6 +30,9 @@ val autoVersion = (((System.currentTimeMillis() / 1000) - 1451606400) / 10).toIn
 
 val edenDir = project(":Eden").projectDir
 
+// Blossom: optional prebuilt 3DS core (see cores/3ds). The app builds without it.
+val blossom3dsAar = file("libs/blossom-3ds.aar")
+
 @Suppress("UnstableApiUsage")
 android {
     namespace = "org.yuzu.yuzu_emu"
@@ -56,6 +59,11 @@ android {
     packaging {
         // This is necessary for libadrenotools custom driver loading
         jniLibs.useLegacyPackaging = true
+
+        // Both cores ship libadrenotools' helper libraries under the same names.
+        if (blossom3dsAar.exists()) {
+            jniLibs.pickFirsts += "lib/**/*.so"
+        }
     }
 
     androidResources {
@@ -327,6 +335,18 @@ play {
 }
 
 dependencies {
+    if (blossom3dsAar.exists()) {
+        implementation(files(blossom3dsAar))
+        // Dependencies of the 3DS core that the Switch app does not already use
+        // (a local AAR carries no dependency information of its own).
+        implementation("androidx.activity:activity-ktx:1.9.2")
+        implementation("androidx.slidingpanelayout:slidingpanelayout:1.2.0")
+        implementation("androidx.work:work-runtime:2.9.1")
+        implementation("org.ini4j:ini4j:0.5.4")
+        implementation("io.coil-kt:coil:2.7.0")
+        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+    }
+
     implementation("androidx.core:core-ktx:1.15.0")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.recyclerview:recyclerview:1.4.0")

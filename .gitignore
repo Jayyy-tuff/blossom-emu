@@ -67,3 +67,15 @@ vulkansdk*.exe
 
 # Build-time generated external sources
 externals/generated
+
+# Blossom 3DS core: upstream checkout, generated sources and build outputs
+/cores/3ds/azahar/
+/cores/3ds/android/core/src/
+/cores/3ds/android/gradlew
+/cores/3ds/android/gradlew.bat
+/cores/3ds/android/gradle/
+/cores/3ds/android/.gradle/
+/cores/3ds/android/build/
+/cores/3ds/android/core/build/
+/cores/3ds/android/core/.cxx/
+/src/android/app/libs/*.aar

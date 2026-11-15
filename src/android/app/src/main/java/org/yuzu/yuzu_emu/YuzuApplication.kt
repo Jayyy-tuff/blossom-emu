@@ -18,6 +18,7 @@ import javax.net.ssl.TrustManagerFactory
 import javax.net.ssl.X509TrustManager
 import android.content.res.Configuration
 import android.os.LocaleList
+import org.yuzu.yuzu_emu.blossom.Blossom3ds
 import org.yuzu.yuzu_emu.features.settings.model.IntSetting
 import org.yuzu.yuzu_emu.utils.DirectoryInitialization
 import org.yuzu.yuzu_emu.utils.DocumentsTree
@@ -76,6 +77,9 @@ class YuzuApplication : Application() {
         ControllerNavigationGlobalHook.install(this)
 
         createNotificationChannels()
+
+        // Blossom: start the optional 3DS core
+        Blossom3ds.init(this)
     }
 
     companion object {

@@ -17,8 +17,93 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  core3ds:
+    name: 3DS core (Azahar) AAR
+    runs-on: ubuntu-24.04
+    timeout-minutes: 180
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Read pinned Azahar commit
+        id: pin
+        run: echo "commit=$(cat cores/3ds/AZAHAR_COMMIT)" >> "$GITHUB_OUTPUT"
+
+      # The AAR only changes when Azahar, the 3DS build files or the Switch app's
+      # resource names (which decide what gets renamed) change.
+      - name: Restore cached AAR
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: src/android/app/libs/blossom-3ds.aar
+          key: blossom-3ds-aar-${{ steps.pin.outputs.commit }}-${{ hashFiles('cores/3ds/**', 'src/android/app/src/main/res/**') }}
+
+      - name: Free disk space
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost /opt/hostedtoolcache/CodeQL
+
+      - name: Fetch Azahar
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p cores/3ds/azahar && cd cores/3ds/azahar
+          git init -q
+          git remote add origin https://github.com/azahar-emu/azahar
+          git fetch -q --depth 1 origin "${{ steps.pin.outputs.commit }}"
+          git checkout -q FETCH_HEAD
+          git submodule update --init --recursive --depth 1 --jobs 8 \
+            || git submodule update --init --recursive --jobs 8
+
+      - name: Set up JDK 17
+        if: steps.cache.outputs.cache-hit != 'true'
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Install NDK and CMake
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          NDK_VERSION=$(sed -n 's/.*ndkVersion = "\(.*\)".*/\1/p' cores/3ds/android/core/build.gradle.kts)
+          SDKMANAGER="${ANDROID_SDK_ROOT:-$ANDROID_HOME}/cmdline-tools/latest/bin/sdkmanager"
+          yes | "$SDKMANAGER" --licenses > /dev/null || true
+          "$SDKMANAGER" "cmake;3.31.6"
+          "$SDKMANAGER" "ndk;${NDK_VERSION}" || echo "::warning::sdkmanager could not install NDK ${NDK_VERSION}"
+
+      - name: Prepare library sources
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: |
+          python3 cores/3ds/prepare.py \
+            --azahar cores/3ds/azahar \
+            --host-res src/android/app/src/main/res \
+            --out cores/3ds/android/core/src/main
+          # Reuse Azahar's Gradle wrapper so the Gradle version matches upstream.
+          cp -r cores/3ds/azahar/src/android/gradle cores/3ds/azahar/src/android/gradlew cores/3ds/android/
+          chmod +x cores/3ds/android/gradlew
+
+      - name: Compile Kotlin (fast check)
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: cores/3ds/android
+        run: ./gradlew :core:compileVanillaReleaseKotlin --stacktrace
+
+      - name: Build AAR
+        if: steps.cache.outputs.cache-hit != 'true'
+        working-directory: cores/3ds/android
+        run: |
+          ./gradlew :core:assembleVanillaRelease -Dorg.gradle.workers.max="$(nproc)" --stacktrace
+          mkdir -p ../../../src/android/app/libs
+          cp core/build/outputs/aar/core-vanilla-release.aar ../../../src/android/app/libs/blossom-3ds.aar
+          unzip -l ../../../src/android/app/libs/blossom-3ds.aar | grep -E "\.so|classes.jar|AndroidManifest"
+
+      - name: Upload AAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: blossom-3ds-aar
+          path: src/android/app/libs/blossom-3ds.aar
+          if-no-files-found: error
+
   android:
     name: Android arm64 APK
+    needs: core3ds
     runs-on: ubuntu-24.04
     timeout-minutes: 240
 
@@ -32,6 +117,12 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+
+      - name: Download 3DS core
+        uses: actions/download-artifact@v4
+        with:
+          name: blossom-3ds-aar
+          path: src/android/app/libs
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -69,10 +160,17 @@ jobs:
           key: blossom-gradle-${{ hashFiles('src/android/**/*.gradle.kts', 'src/android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: blossom-gradle-
 
-      - name: Build APK
+      # Fails within minutes on Kotlin, resource or manifest merge problems,
+      # before the long native build starts.
+      - name: Compile Kotlin and merge resources (fast check)
         working-directory: src/android
         run: |
           chmod +x ./gradlew
+          ./gradlew :app:processMainlineReleaseResources :app:compileMainlineReleaseKotlin --stacktrace
+
+      - name: Build APK
+        working-directory: src/android
+        run: |
           ./gradlew assembleMainlineRelease \
             -Dorg.gradle.workers.max="$(nproc)" \
             -PYUZU_ANDROID_ARGS="-DUSE_CCACHE=false" \
@@ -85,7 +183,15 @@ jobs:
           mkdir -p artifacts
           cp src/android/app/build/outputs/apk/mainline/release/*.apk "artifacts/Blossom-Emu-android-${SHORT_SHA}.apk"
           ls -l artifacts
+          unzip -l artifacts/*.apk | grep "\.so$"
           echo "sha=${SHORT_SHA}" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_REF_NAME}" = "main" ]; then
+            echo "tag=latest" >> "$GITHUB_OUTPUT"
+            echo "title=Blossom Emu (latest dev build)" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=preview-${GITHUB_REF_NAME//\//-}" >> "$GITHUB_OUTPUT"
+            echo "title=Blossom Emu preview (${GITHUB_REF_NAME})" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -93,14 +199,14 @@ jobs:
           name: Blossom-Emu-android-${{ steps.apk.outputs.sha }}
           path: artifacts/*.apk
 
-      - name: Publish to the "latest" pre-release
-        if: github.ref == 'refs/heads/main'
+      - name: Publish pre-release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          name: Blossom Emu (latest dev build)
+          tag_name: ${{ steps.apk.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.apk.outputs.title }}
           prerelease: true
           body: |
-            Automated development build of commit ${{ github.sha }}.
-            Switch core: Eden fork. No games, firmware or keys are included.
+            Automated development build of commit ${{ github.sha }} (branch ${{ github.ref_name }}).
+            Switch core: Eden fork. 3DS core: Azahar. No games, firmware or keys are included.
           files: artifacts/*.apk

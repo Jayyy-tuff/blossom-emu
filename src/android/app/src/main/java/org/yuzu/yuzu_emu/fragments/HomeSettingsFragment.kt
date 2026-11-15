@@ -27,6 +27,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
+import org.yuzu.yuzu_emu.blossom.Blossom3ds
 import org.yuzu.yuzu_emu.HomeNavigationDirections
 import org.yuzu.yuzu_emu.NativeLibrary
 import org.yuzu.yuzu_emu.R
@@ -80,6 +81,17 @@ class HomeSettingsFragment : Fragment() {
         binding.toolbarHomeSettings.title = getString(R.string.preferences_settings)
 
         val optionsList: MutableList<HomeSetting> = mutableListOf<HomeSetting>().apply {
+            // Blossom: entry point to the 3DS core
+            if (Blossom3ds.isReady) {
+                add(
+                    HomeSetting(
+                        R.string.blossom_3ds,
+                        R.string.blossom_3ds_description,
+                        R.drawable.ic_controller,
+                        { Blossom3ds.launch(requireContext()) }
+                    )
+                )
+            }
             add(
                 HomeSetting(
                     R.string.advanced_settings,
