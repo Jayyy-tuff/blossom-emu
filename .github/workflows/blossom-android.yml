@@ -165,13 +165,14 @@ jobs:
           key: blossom-gradle-${{ hashFiles('src/android/**/*.gradle.kts', 'src/android/gradle/wrapper/gradle-wrapper.properties') }}
           restore-keys: blossom-gradle-
 
-      # Fails within minutes on Kotlin, resource or manifest merge problems,
-      # before the long native build starts.
-      - name: Compile Kotlin and merge resources (fast check)
+      # Fails within minutes on resource or manifest merge problems, before the long
+      # native build starts. (Kotlin cannot be checked here: it needs SDL's Java
+      # sources, which the native build generates.)
+      - name: Merge resources and manifests (fast check)
         working-directory: src/android
         run: |
           chmod +x ./gradlew
-          ./gradlew :app:processMainlineReleaseResources :app:compileMainlineReleaseKotlin --stacktrace
+          ./gradlew :app:processMainlineReleaseResources --stacktrace
 
       - name: Build APK
         working-directory: src/android

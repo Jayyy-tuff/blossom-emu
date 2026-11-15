@@ -344,7 +344,6 @@ dependencies {
         implementation("androidx.work:work-runtime:2.9.1")
         implementation("org.ini4j:ini4j:0.5.4")
         implementation("io.coil-kt:coil:2.7.0")
-        implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
     }
 
     implementation("androidx.core:core-ktx:1.15.0")

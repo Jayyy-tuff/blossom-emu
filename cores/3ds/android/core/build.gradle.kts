@@ -110,7 +110,9 @@ dependencies {
     implementation("info.debatty:java-string-similarity:2.0.0")
     implementation("io.coil-kt:coil:2.7.0")
     implementation("org.ini4j:ini4j:0.5.4")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.2")
+    // Kept at the Switch app's version: both cores share one runtime inside the APK,
+    // and the app's Kotlin 1.9 compiler rejects the 1.7 runtime Azahar uses upstream.
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
 }
 
 // The library-only resource verification step cannot resolve navigation graphs that
