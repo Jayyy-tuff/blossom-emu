@@ -7,6 +7,41 @@
 -->
 <!-- lang: en-GB -->
 
+# 🌸 Blossom Emu
+
+**Performance First. Compatibility Always. Customization Without Limits.**
+
+Blossom Emu is an open-source Nintendo Switch emulator for Android, with Nintendo 3DS support planned.
+It is a fork of [Eden](https://git.eden-emu.dev/eden-emu/eden); the 3DS core will come from
+[Azahar](https://github.com/azahar-emu/azahar). All credit for the emulation itself belongs to those
+projects and to yuzu and Citra before them.
+
+- **Status and roadmap:** [docs/blossom/PLAN.md](docs/blossom/PLAN.md)
+- **Changes made to Eden:** [docs/blossom/MODIFICATIONS.md](docs/blossom/MODIFICATIONS.md)
+- **Licence:** GPL-3.0-or-later, see [LICENSE.txt](LICENSE.txt)
+
+Blossom Emu includes no games, firmware, keys or Nintendo system software. Use your own legally
+dumped games and system files.
+
+## Download
+
+Development builds are attached to the `latest` pre-release on this repository's Releases page.
+Android 13 or newer, arm64 only.
+
+## Build
+
+Push to `main` (or run the **Blossom Android** workflow by hand) and GitHub Actions builds the APK.
+To build locally, follow [docs/build/Android.md](docs/build/Android.md), then:
+
+```sh
+cd src/android
+./gradlew assembleMainlineRelease
+```
+
+---
+
+The original Eden README follows.
+
 <h1 align="center">
   <br>
   <a href="https://git.eden-emu.dev/eden-emu/eden"><img src="./dist/qt_themes/default/icons/256x256/eden.png" alt="Eden" width="200"></a>

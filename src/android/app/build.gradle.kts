@@ -63,7 +63,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "dev.eden.eden_emulator"
+        applicationId = "org.blossomemu.blossom"
         minSdk = 24
         targetSdk = 36
         versionName = getGitVersion()
@@ -182,12 +182,12 @@ android {
     flavorDimensions.add("version")
     productFlavors {
         create("mainline") {
-            manifestPlaceholders += mapOf("appNameBase" to "Eden")
+            manifestPlaceholders += mapOf("appNameBase" to "Blossom Emu")
             dimension = "version"
             isDefault = true
             minSdk = 33
 
-            resValue("string", "app_name_suffixed", "Eden")
+            resValue("string", "app_name_suffixed", "Blossom Emu")
 
             ndk {
                 abiFilters += listOf("arm64-v8a")
@@ -261,12 +261,12 @@ android {
     }
 
     productFlavors.all {
-        val currentName = manifestPlaceholders["appNameBase"] as? String ?: "Eden"
+        val currentName = manifestPlaceholders["appNameBase"] as? String ?: "Blossom Emu"
         val suffix = if (isNightly) " Nightly" else ""
 
         // apply nightly suffix I/A
         resValue("string", "app_name_suffixed", "$currentName$suffix")
-        resValue("string", "app_name", "Eden$suffix")
+        resValue("string", "app_name", "Blossom Emu$suffix")
     }
 
     sourceSets {

@@ -229,62 +229,58 @@
     <!-- Eden Theme Colors -->
 
     <!-- Synthwave/Vaporwave Primary Colors -->
-    <color name="eden_primary">#FF0080</color> <!-- Neon magenta -->
-    <color name="eden_primary_variant">#E6006B</color> <!-- Darker magenta -->
-    <color name="eden_secondary">#00FFFF</color> <!-- Electric cyan -->
-    <color name="eden_secondary_variant">#00E6E6</color> <!-- Darker cyan -->
+    <color name="eden_primary">#F4A7C1</color> <!-- Blossom -->
+    <color name="eden_primary_variant">#D98AA6</color> <!-- Blossom -->
+    <color name="eden_secondary">#B9A7F4</color> <!-- Blossom -->
+    <color name="eden_secondary_variant">#9D8BE0</color> <!-- Blossom -->
 
     <!-- Background Colors - Deep space black -->
-    <color name="eden_background">#000000</color> <!-- Pure black background -->
-    <color name="eden_surface">#0D0D0D</color> <!-- Card surface -->
-    <color name="eden_surface_variant">#1A1A1A</color> <!-- Elevated surface -->
+    <color name="eden_background">#15151D</color> <!-- Blossom -->
+    <color name="eden_surface">#1C1C27</color> <!-- Blossom -->
+    <color name="eden_surface_variant">#262633</color> <!-- Blossom -->
 
     <!-- Text Colors - High contrast for readability -->
-    <color name="eden_on_background">#FFFFFF</color> <!-- Pure white text -->
-    <color name="eden_on_surface">#FFFFFF</color> <!-- Pure white text -->
-    <color name="eden_on_primary">#FFFFFF</color> <!-- White on neon -->
-    <color name="eden_on_secondary">#000000</color> <!-- Black on cyan -->
+    <color name="eden_on_background">#F8F8FC</color> <!-- Blossom -->
+    <color name="eden_on_surface">#F8F8FC</color> <!-- Blossom -->
+    <color name="eden_on_primary">#15151D</color> <!-- Blossom -->
+    <color name="eden_on_secondary">#15151D</color> <!-- Blossom -->
 
     <!-- Synthwave Status Colors -->
-    <color name="eden_error">#FF0040</color> <!-- Neon red -->
-    <color name="eden_success">#00FF80</color> <!-- Neon green -->
-    <color name="eden_warning">#FFFF00</color> <!-- Neon yellow -->
-    <color name="eden_info">#0080FF</color> <!-- Electric blue -->
+    <color name="eden_error">#FF6B8B</color> <!-- Blossom -->
+    <color name="eden_success">#9DE5C5</color> <!-- Blossom -->
+    <color name="eden_warning">#F4D58A</color> <!-- Blossom -->
+    <color name="eden_info">#B9A7F4</color> <!-- Blossom -->
 
     <!-- Synthwave Accent Colors -->
-    <color name="eden_accent_purple">#9D00FF</color> <!-- Electric purple -->
-    <color name="eden_accent_blue">#0080FF</color> <!-- Electric blue -->
-    <color name="eden_accent_orange">#FF8000</color> <!-- Neon orange -->
+    <color name="eden_accent_purple">#B9A7F4</color> <!-- Blossom -->
+    <color name="eden_accent_blue">#9DE5C5</color> <!-- Blossom -->
+    <color name="eden_accent_orange">#F4C1A7</color> <!-- Blossom -->
 
     <!-- Neon Glow Effects -->
-    <color name="eden_glow_pink">#80FF0080</color> <!-- Magenta glow -->
-    <color name="eden_glow_cyan">#8060D1F6</color> <!-- Cyan glow -->
-    <color name="eden_glow_orange">#80FF8000</color> <!-- Orange glow -->
+    <color name="eden_glow_pink">#80F4A7C1</color> <!-- Blossom -->
+    <color name="eden_glow_cyan">#80B9A7F4</color> <!-- Blossom -->
+    <color name="eden_glow_orange">#809DE5C5</color> <!-- Blossom -->
 
     <!-- Neon Border Colors -->
-    <color name="eden_border">#7c757f</color> <!-- Subtle border -->
-    <color name="eden_border_light">#948b98</color> <!-- Lighter border -->
-    <color name="eden_border_gradient_start">#FF0080</color> <!-- Neon magenta -->
-    <color name="eden_border_gradient_end">#60D1F6</color> <!-- Electric cyan -->
+    <color name="eden_border">#4A4860</color> <!-- Blossom -->
+    <color name="eden_border_light">#6A6782</color> <!-- Blossom -->
+    <color name="eden_border_gradient_start">#F4A7C1</color> <!-- Blossom -->
+    <color name="eden_border_gradient_end">#B9A7F4</color> <!-- Blossom -->
 
     <!-- Overlay Colors -->
-    <color name="eden_overlay">#CC000000</color>
-
-    <!-- Neon Button Colors -->
-    <color name="eden_button_primary_bg">#FF0080</color> <!-- Neon magenta -->
+    <color name="eden_overlay">#CC15151D</color> <!-- Blossom -->
+    <color name="eden_button_primary_bg">#F4A7C1</color> <!-- Blossom -->
     <color name="eden_button_secondary_bg">#00000000</color> <!-- Transparent -->
-    <color name="eden_button_secondary_border">#00FFFF</color> <!-- Electric cyan -->
+    <color name="eden_button_secondary_border">#B9A7F4</color> <!-- Blossom -->
 
     <!-- Synthwave Card Colors -->
-    <color name="eden_card_background">#0D0D0D</color> <!-- Almost black -->
-    <color name="eden_card_background_elevated">#1A1A1A</color> <!-- Elevated black -->
+    <color name="eden_card_background">#1C1C27</color> <!-- Blossom -->
+    <color name="eden_card_background_elevated">#262633</color> <!-- Blossom -->
 
     <!-- Transparent versions for gradients -->
     <color name="eden_transparent">#00000000</color>
-    <color name="eden_primary_transparent">#05FF0080</color>
-    <color name="eden_secondary_transparent">#0500FFFF</color>
-
-    <!-- Common Colors Across All Themes -->
+    <color name="eden_primary_transparent">#05F4A7C1</color> <!-- Blossom -->
+    <color name="eden_secondary_transparent">#05B9A7F4</color> <!-- Blossom -->
     <color name="yuzu_transparent_black">#80000000</color>
     <color name="yuzu_outlineVariant">#C6C5D0</color>
     <color name="yuzu_error">#FFB4AB</color>
