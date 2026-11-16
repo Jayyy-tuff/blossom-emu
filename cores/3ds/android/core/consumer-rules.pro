@@ -9,5 +9,9 @@
 -dontwarn java.beans.VetoableChangeListener
 -dontwarn java.beans.VetoableChangeSupport
 
-# The host app starts the 3DS core by reflection.
--keep class org.citra.citra_emu.CitraApplication { *; }
+# Azahar's native library looks up Kotlin classes, methods and fields by name when
+# it loads, and Azahar's own build runs without R8 optimisation. The Blossom app
+# optimises, which may rename, inline or drop those members and abort the process on
+# load. Keep the whole 3DS core exactly as compiled. (The host app also starts
+# CitraApplication by reflection.)
+-keep class org.citra.citra_emu.** { *; }

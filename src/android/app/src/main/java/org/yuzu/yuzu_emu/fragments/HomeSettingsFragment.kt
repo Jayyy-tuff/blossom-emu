@@ -28,6 +28,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.transition.MaterialSharedAxis
 import org.yuzu.yuzu_emu.blossom.Blossom3ds
+import org.yuzu.yuzu_emu.blossom.BlossomDiagnostics
 import org.yuzu.yuzu_emu.HomeNavigationDirections
 import org.yuzu.yuzu_emu.NativeLibrary
 import org.yuzu.yuzu_emu.R
@@ -82,16 +83,36 @@ class HomeSettingsFragment : Fragment() {
 
         val optionsList: MutableList<HomeSetting> = mutableListOf<HomeSetting>().apply {
             // Blossom: entry point to the 3DS core
-            if (Blossom3ds.isReady) {
+            if (Blossom3ds.isAvailable) {
                 add(
                     HomeSetting(
                         R.string.blossom_3ds,
-                        R.string.blossom_3ds_description,
+                        if (Blossom3ds.crashedLastStart) {
+                            R.string.blossom_3ds_crashed
+                        } else {
+                            R.string.blossom_3ds_description
+                        },
                         R.drawable.ic_controller,
-                        { Blossom3ds.launch(requireContext()) }
+                        {
+                            if (!Blossom3ds.launch(requireContext())) {
+                                Toast.makeText(
+                                    requireContext(),
+                                    R.string.blossom_3ds_failed,
+                                    Toast.LENGTH_LONG
+                                ).show()
+                            }
+                        }
                     )
                 )
             }
+            add(
+                HomeSetting(
+                    R.string.blossom_diagnostics,
+                    R.string.blossom_diagnostics_description,
+                    R.drawable.ic_info_outline,
+                    { BlossomDiagnostics.share(requireContext()) }
+                )
+            )
             add(
                 HomeSetting(
                     R.string.advanced_settings,

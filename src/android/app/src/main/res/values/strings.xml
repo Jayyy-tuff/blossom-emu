@@ -1949,5 +1949,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- Blossom -->
     <string name="blossom_3ds" translatable="false">Nintendo 3DS</string>
     <string name="blossom_3ds_description" translatable="false">Open the 3DS library (Azahar core)</string>
+    <string name="blossom_3ds_crashed" translatable="false">The 3DS core crashed the last time it started. Tap to try again.</string>
+    <string name="blossom_3ds_failed" translatable="false">The 3DS core could not start. Use Share diagnostics to report it.</string>
+    <string name="blossom_diagnostics" translatable="false">Share diagnostics</string>
+    <string name="blossom_diagnostics_description" translatable="false">Send a crash report for Blossom Emu</string>
 
 </resources>
